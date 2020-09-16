@@ -16,6 +16,12 @@ class FirstScreenProvider with ChangeNotifier {
   Filter _filter = presetFilters[0];
   Filter get filter => _filter;
 
+  double _contrast = EditorType.contrast.defaultValue;
+  double get contrast => _contrast;
+
+  double _brightness = EditorType.brightness.defaultValue;
+  double get brightness => _brightness;
+
   void getImage() async {
     final imagePicked = await picker.getImage(source: ImageSource.gallery);
     _imageFile = File(imagePicked.path);
@@ -23,6 +29,20 @@ class FirstScreenProvider with ChangeNotifier {
   }
 
   void onFilterSelected(Filter filter) {
+    _contrast = EditorType.contrast.defaultValue;
+    _brightness = EditorType.brightness.defaultValue;
+    _filter = filter;
+    notifyListeners();
+  }
+
+  void onContrastChanged(double value, Filter filter) {
+    _contrast = value;
+    _filter = filter;
+    notifyListeners();
+  }
+
+  void onBrightnessChanged(double value, Filter filter) {
+    _brightness = value;
     _filter = filter;
     notifyListeners();
   }

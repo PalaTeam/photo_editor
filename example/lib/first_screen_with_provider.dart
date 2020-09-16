@@ -54,6 +54,18 @@ class FirstScreenWithProvider extends StatelessWidget {
           image: FileImage(provider.imageFile),
           onFilterSelected: provider.onFilterSelected,
         ),
+        Editor(
+          editorType: EditorType.contrast,
+          filter: provider.filter,
+          value: provider.contrast,
+          onValueChanged: provider.onContrastChanged,
+        ),
+        Editor(
+          editorType: EditorType.brightness,
+          filter: provider.filter,
+          value: provider.brightness,
+          onValueChanged: provider.onBrightnessChanged,
+        ),
       ],
     );
   }

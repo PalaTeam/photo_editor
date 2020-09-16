@@ -18,8 +18,10 @@ class _FirstScreenState extends State<FirstScreen> {
   final _globalKey = GlobalKey();
   final picker = ImagePicker();
 
-  File imageFile;
-  Filter filter = presetFilters[0];
+  File _imageFile;
+  Filter _filter = presetFilters[0];
+  double _contrast = EditorType.contrast.defaultValue;
+  double _brightness = EditorType.brightness.defaultValue;
 
   @override
   Widget build(BuildContext context) {
@@ -42,22 +44,34 @@ class _FirstScreenState extends State<FirstScreen> {
   }
 
   Widget _handleState() {
-    if (imageFile != null) {
+    if (_imageFile != null) {
       return Column(
         children: [
           Expanded(
             child: RepaintBoundary(
               key: _globalKey,
               child: ColorFiltered(
-                colorFilter: filter.filter,
-                child: Image.file(imageFile),
+                colorFilter: _filter.filter,
+                child: Image.file(_imageFile),
               ),
             ),
           ),
           FilterList(
             filters: presetFilters,
-            image: FileImage(imageFile),
+            image: FileImage(_imageFile),
             onFilterSelected: _onFilterSelected,
+          ),
+          Editor(
+            editorType: EditorType.contrast,
+            filter: _filter,
+            value: _contrast,
+            onValueChanged: _onContrastChanged,
+          ),
+          Editor(
+            editorType: EditorType.brightness,
+            filter: _filter,
+            value: _brightness,
+            onValueChanged: _onBrightnessChanged,
           ),
         ],
       );
@@ -69,19 +83,35 @@ class _FirstScreenState extends State<FirstScreen> {
 
   void _onFilterSelected(Filter filter) {
     setState(() {
-      this.filter = filter;
+      _contrast = EditorType.contrast.defaultValue;
+      _brightness = EditorType.brightness.defaultValue;
+      _filter = filter;
+    });
+  }
+
+  void _onContrastChanged(double value, Filter filter) {
+    setState(() {
+      _contrast = value;
+      _filter = filter;
+    });
+  }
+
+  void _onBrightnessChanged(double value, Filter filter) {
+    setState(() {
+      _brightness = value;
+      _filter = filter;
     });
   }
 
   void _getImage() async {
     final imagePicked = await picker.getImage(source: ImageSource.gallery);
     setState(() {
-      imageFile = File(imagePicked.path);
+      _imageFile = File(imagePicked.path);
     });
   }
 
   void convertWidgetToImage() async {
-    if (imageFile == null) {
+    if (_imageFile == null) {
       return;
     }
     RenderRepaintBoundary repaintBoundary = _globalKey.currentContext.findRenderObject();
