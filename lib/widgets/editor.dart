@@ -6,17 +6,24 @@ class Editor extends StatelessWidget {
   final Filter filter;
   final double value;
   final OnValueChanged onValueChanged;
+  final Color activeColor;
+  final Color inactiveColor;
 
-  Editor({
+  const Editor({
+    Key key,
     @required this.editorType,
     @required this.filter,
     @required this.value,
-    @required this.onValueChanged
-  });
+    @required this.onValueChanged,
+    this.activeColor,
+    this.inactiveColor,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Slider(
+      activeColor: activeColor,
+      inactiveColor: inactiveColor,
       value: value,
       max: editorType.max,
       min: editorType.min,
